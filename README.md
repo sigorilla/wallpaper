@@ -14,7 +14,7 @@ Agent for update wallpaper on Mac everyday.
     ```sh
     git clone git@github.com:sigorilla/wallpaper.git
     cd wallpaper
-    python3 setup.py
+    ./setup.py
     lunchy start wallpaper
     ```
 
