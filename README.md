@@ -4,17 +4,24 @@ Agent for update wallpaper on Mac everyday.
 
 ## Setup
 
-1. Install [lunchy](https://github.com/eddiezane/lunchy)
-
-    ```sh
-    gem install lunchy
-    ```
 1. Install wallpaper
 
     ```sh
     git clone git@github.com:sigorilla/wallpaper.git
     cd wallpaper
     ./setup.py
+    ```
+1. Install [lunchy](https://github.com/eddiezane/lunchy)
+
+    ```sh
+    gem install lunchy
+    ```
+
+    > Also you can use another managers
+
+1. Start service
+
+    ```sh
     lunchy start wallpaper
     ```
 

@@ -14,6 +14,11 @@ DIR_PATH = expanduser('~/Pictures/wallpapers/')
 
 
 def script(code):
+    """
+    Run script
+    :param code: Code to run
+    :return: Result of running
+    """
     return subprocess.call(
         ['bash', '-c', code],
         stdout=sys.stdout,
@@ -22,10 +27,18 @@ def script(code):
 
 
 def getpath(path):
+    """
+    :param path: Path
+    :return: Normalize path from root
+    """
     return normpath(join(getcwd(), expanduser(path)))
 
 
 def set_wallpaper(file):
+    """
+    Set wallpaper from file
+    :param file: Path to file
+    """
     print('Changing wallpaper...')
     query = 'UPDATE data SET value = "%s"' % file
     assert script('''
@@ -38,6 +51,13 @@ def set_wallpaper(file):
 
 
 def main(path, file, url):
+    """
+    Set wallpaper if file (or file from server) already exists,
+    or download and set.
+    :param path: Path for wallpapers directory
+    :param file: Path to file for wallpaper
+    :param url: Url to download picture
+    """
     # TODO: add all exception handlers
     # TODO: add tests
     path = getpath(path)
@@ -46,6 +66,7 @@ def main(path, file, url):
     else:
         file = getpath(file)
     try:
+        isset = True
         if not isfile(file):
             with request.urlopen(url) as response:
                 assert response.getcode() == 200, 'Got unexpected HTTP response'
@@ -56,18 +77,25 @@ def main(path, file, url):
                     mkdir(path)
                     print('Directory is created: %s' % path)
                 file = join(path, filename)
-                with open(file, 'wb') as fd:
-                    print('Downloading...')
-                    fd.write(response.read())
-                    print('File is downloaded: %s' % file)
-        set_wallpaper(file)
+                if not isfile(file):
+                    with open(file, 'wb') as fd:
+                        print('Downloading...')
+                        fd.write(response.read())
+                        print('File is downloaded: %s' % file)
+                else:
+                    isset = False
+
+        if isset:
+            set_wallpaper(file)
+        else:
+            print('File exists: %s' % file)
     except Exception as err:
         print('Something wrong with network or filesystem: %s' % err)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set wallpaper')
     parser.add_argument('-p', '--path', default=DIR_PATH, type=str,
-                        help='Path for wallpapers directory. Default: %s' % DIR_PATH)
+                        help='Path for wallpapers directory.')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-f', '--file', type=str, help='Path to file for wallpaper')
     group.add_argument('-u', '--url', default=YANDEX_TODAY_URL, type=str,
