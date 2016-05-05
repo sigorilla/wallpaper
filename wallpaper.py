@@ -71,7 +71,7 @@ def main(path, file, url):
             with request.urlopen(url) as response:
                 assert response.getcode() == 200, 'Got unexpected HTTP response'
                 attachment = response.getheader('Content-Disposition')
-                filename = re.search('.+\"(?P<filename>.+)\"', attachment).group('filename')
+                filename = re.search('filename=(?P<filename>.+\.jpg)', attachment).group('filename')
                 if not isdir(path):
                     print('Path doesn\'t exist.')
                     mkdir(path)

@@ -40,6 +40,7 @@ def plist(source, arguments=None):
         ProgramArguments=arguments,
         RunAtLoad=True,
         StartInterval=600,
+        KeepAlive=True,
     )
 
 
